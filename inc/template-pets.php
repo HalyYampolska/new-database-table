@@ -1,5 +1,8 @@
 <?php
 
+require_once plugin_dir_path(__FILE__) . 'GetPets.php';
+$getPets = new GetPets();
+
 get_header(); ?>
 
 <div class="page-banner">
@@ -14,25 +17,7 @@ get_header(); ?>
 
 <div class="container container--narrow page-section">
 
-  <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong>x</strong> results (showing the first x).</p>
-
-
-  <?php
-  // SQL
-
-  global $wpdb;
-  $tablename = $wpdb->prefix . 'pets'; // make a variable dinamic
-  $ourQuery = $wpdb->prepare("SELECT * FROM $tablename LIMIT 100"); // make a variable wp_pets dinamic 
-  $pets = $wpdb->get_results($ourQuery);
-
-  /* Practic Create a Table
-    global $wpdb;
-    $ourQuery = $wpdb->prepare("SELECT * FROM wp_pets WHERE species = %s AND birthyear > %d LIMIT 10", array('hamster', 2018)); 
-    $pets = $wpdb->get_results($ourQuery);
-    var_dump($pets);
-  */  
-  ?>
-  
+  <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong><?php echo $getPets->count; ?></strong> results (showing the first <?php echo count($getPets->pets) ?>).</p>
 
   <table class="pet-adoption-table">
     <tr>
@@ -46,7 +31,7 @@ get_header(); ?>
     </tr>
   <?php 
   // For Table View 
-  foreach($pets as $pet) { ?>
+  foreach($getPets->pets as $pet) { ?>
     <tr>
       <td><?php echo $pet->petname; ?></td>
       <td><?php echo $pet->species; ?></td>
